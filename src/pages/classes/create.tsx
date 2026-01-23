@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useBack, useList } from "@refinedev/core";
 import { Loader2 } from "lucide-react";
 import { classSchema } from "@/lib/schema";
-
+import UploadWidget from "@/components/upload-widget";
 import { Subject, User } from "@/types";
 import z from "zod";
 
@@ -124,7 +124,33 @@ const ClassesCreate = () => {
                                             <FormLabel>
                                                 Banner Image <span className="text-orange-600">*</span>
                                             </FormLabel>
-
+                                            <FormControl>
+                                                <UploadWidget
+                                                    value={
+                                                        field.value
+                                                            ? {
+                                                                url: field.value,
+                                                                publicId: bannerPublicId ?? "",
+                                                            }
+                                                            : null
+                                                    }
+                                                    onChange={(file) => {
+                                                        if (file) {
+                                                            field.onChange(file.url);
+                                                            form.setValue("bannerCldPubId", file.publicId, {
+                                                                shouldValidate: true,
+                                                                shouldDirty: true,
+                                                            });
+                                                        } else {
+                                                            field.onChange("");
+                                                            form.setValue("bannerCldPubId", "", {
+                                                                shouldValidate: true,
+                                                                shouldDirty: true,
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                            </FormControl>
                                             <FormMessage />
                                             {errors.bannerCldPubId && !errors.bannerUrl && (
                                                 <p className="text-destructive text-sm">
